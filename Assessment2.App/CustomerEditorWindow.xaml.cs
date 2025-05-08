@@ -1,11 +1,9 @@
-﻿using Assignment2.App.BusinessLayer;
-using System.Windows;
+﻿using System.Windows;
+using Assessment2.App.Models;
+using Assessment2.App.BusinessLayer;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
-    /// <summary>
-    /// Interaction logic for CustomerEditorWindow.xaml
-    /// </summary>
     public partial class CustomerEditorWindow : Window
     {
         private readonly Store dataStore;
@@ -23,70 +21,54 @@ namespace Assignment2.App
             set
             {
                 customer = value;
-                firstName.Text = customer?.FirstName ?? string.Empty;
-                surname.Text = customer?.Surname ?? string.Empty;
-                phoneNumber.Text = customer?.PhoneNumber ?? string.Empty;
-                address.Text = customer?.Address ?? string.Empty;
+                firstName.Text = customer?.FirstName ?? "";
+                surname.Text = customer?.Surname ?? "";
+                phoneNumber.Text = customer?.PhoneNumber ?? "";
+                address.Text = customer?.Address ?? "";
             }
         }
 
-        private bool AddNewCustomer()
+        private void OnSave(object sender, RoutedEventArgs e)
         {
-            var customer = dataStore.AddCustomer();
-            customer.FirstName = firstName.Text;
-            customer.Surname = surname.Text;
-            customer.PhoneNumber = phoneNumber.Text;
-            customer.Address = address.Text;
-            if (!customer.CheckIfValid())
+            if (customer == null)
             {
-                MessageBox.Show(
-                    "Cannot save customer - some information is missing",
-                    "Save error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                return false;
+                var newCustomer = new Customer
+                {
+                    FirstName = firstName.Text,
+                    Surname = surname.Text,
+                    PhoneNumber = phoneNumber.Text,
+                    Address = address.Text
+                };
+
+                if (!newCustomer.CheckIfValid())
+                {
+                    MessageBox.Show("Invalid data.");
+                    return;
+                }
+
+                dataStore.AddCustomer(newCustomer);
+            }
+            else
+            {
+                customer.FirstName = firstName.Text;
+                customer.Surname = surname.Text;
+                customer.PhoneNumber = phoneNumber.Text;
+                customer.Address = address.Text;
+
+                if (!customer.CheckIfValid())
+                {
+                    MessageBox.Show("Invalid data.");
+                    return;
+                }
             }
 
-            dataStore.Customers.Add(customer);
-            dataStore.Save("data");
-            return true;
+            dataStore.SaveData("data.json");
+            Close();
         }
 
         private void OnCancel(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void OnSave(object sender, RoutedEventArgs e)
-        {
-            if (Customer != null)
-            {
-                if (UpdateCustomer()) Close();
-            }
-            else
-            {
-                if (AddNewCustomer()) Close();
-            }
-        }
-
-        private bool UpdateCustomer()
-        {
-            Customer!.FirstName = firstName.Text;
-            Customer.Surname = surname.Text;
-            Customer.PhoneNumber = phoneNumber.Text;
-            Customer.Address = address.Text;
-            if (!Customer.CheckIfValid())
-            {
-                MessageBox.Show(
-                    "Cannot save customer - some information is missing",
-                    "Save error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                return false;
-            }
-
-            dataStore.Save("data");
-            return true;
         }
     }
 }
