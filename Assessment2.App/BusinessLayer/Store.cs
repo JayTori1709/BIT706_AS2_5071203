@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Assessment2.Core;
-
+using Assessment2.App.BusinessLayer;
+ 
 namespace Assessment2.App
 {
     public class Store

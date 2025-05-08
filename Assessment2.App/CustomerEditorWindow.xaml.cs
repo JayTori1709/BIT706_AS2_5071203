@@ -1,4 +1,4 @@
-﻿using Assessment2.Core; // For accessing the Customer class
+﻿using Assessment2.App.BusinessLayer; namespace Assessment2.App.BusinessLayer // For accessing the Customer class
 using System.Windows;
 
 namespace Assessment2.App

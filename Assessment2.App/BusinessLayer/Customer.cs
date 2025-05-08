@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using Assessment2.App.BusinessLayer;
 
-namespace Assignment2.App.BusinessLayer
+
+namespace Assessment2.App.BusinessLayer
 {
     public class Customer
     {

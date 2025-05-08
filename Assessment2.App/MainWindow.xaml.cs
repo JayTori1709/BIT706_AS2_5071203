@@ -1,5 +1,4 @@
-﻿using Assessment2.App;
-using Assessment2.Core;
+﻿using Assessment2.App.BusinessLayer; 
 using System.Windows;
 
 namespace Assessment2.App

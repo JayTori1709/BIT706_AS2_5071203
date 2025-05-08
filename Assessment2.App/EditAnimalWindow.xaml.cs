@@ -11,8 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
-namespace Assignment2.App
+using Assessment2.App;
+using Assessment2.App.BusinessLayer; 
+namespace Assessment2.App
 {
     /// <summary>
     /// Interaction logic for EditAnimalWindow.xaml

@@ -1,9 +1,10 @@
-﻿using Assignment2.App.BusinessLayer;
+﻿using As.App.BusinessLayer;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Assessment2.App.BusinessLayer;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
     /// <summary>
     /// Interaction logic for SearchForCustomerWindow.xaml

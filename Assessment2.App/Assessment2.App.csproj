@@ -18,6 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Models\*.cs" />
+    <Compile Include="BusinessLayer\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\add-animal.png" />
     <Resource Include="Images\add-customer.png" />
     <Resource Include="Images\clinic-logo.png" />
