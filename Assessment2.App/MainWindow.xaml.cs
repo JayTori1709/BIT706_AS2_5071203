@@ -1,111 +1,46 @@
-﻿using Assignment2.App.BusinessLayer;
+﻿using Assessment2.Core;
 using System.Windows;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Store dataStore = new();
-
         public MainWindow()
         {
             InitializeComponent();
-            Store.Instance.LoadData();
+            Store.Instance.LoadData(); // Load data on app start
+            RefreshCustomers();
         }
 
-        public void SaveData()
+        private void RefreshCustomers()
         {
-            var data = new
-            {
-                Customers = Customers,
-                Animals = Animals,
-                Microchips = Microchips
-            };
-            File.WriteAllText(GetFilePath(), JsonSerializer.Serialize(data));
+            CustomerListView.ItemsSource = null;
+            CustomerListView.ItemsSource = Store.Instance.Customers;
         }
 
-        public void LoadData()
+        private void AddCustomer_Click(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(GetFilePath()))
+            var editor = new CustomerEditorWindow();
+            if (editor.ShowDialog() == true)
             {
-                var json = File.ReadAllText(GetFilePath());
-                var data = JsonSerializer.Deserialize<SaveData>(json);
-                Customers = data?.Customers ?? new List<Customer>();
-                Animals = data?.Animals ?? new List<Animal>();
-                Microchips = data?.Microchips ?? new List<Microchip>();
+                Store.Instance.Customers.Add(editor.Customer);
+                Store.Instance.SaveData(); // Save changes
+                RefreshCustomers();
             }
         }
 
-        private void EditAnimal(Animal? animal)
+        private void EditCustomer_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AnimalEditorWindow(dataStore)
+            var selectedCustomer = (Customer)CustomerListView.SelectedItem;
+            if (selectedCustomer != null)
             {
-                Animal = animal,
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-            window.ShowDialog();
-        }
-
-        private void EditCustomer(Customer? customer)
-        {
-            var window = new CustomerEditorWindow(dataStore)
-            {
-                Customer = customer,
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-            window.ShowDialog();
-        }
-
-        private void OnAddAnimal(object sender, RoutedEventArgs e)
-        {
-            EditAnimal(null);
-        }
-
-        private void OnAddCustomer(object sender, RoutedEventArgs e)
-        {
-            EditCustomer(null);
-        }
-
-        private void OnEditAnimal(object sender, RoutedEventArgs e)
-        {
-            var customerSearch = new SearchForCustomerWindow(dataStore)
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-
-            if (customerSearch.ShowDialog() != true) return;
-            var animalSearch = new SearchForAnimalWindow(dataStore)
-            {
-                Customer = customerSearch.Customer,
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-
-            if (animalSearch.ShowDialog() == true) EditAnimal(animalSearch.Animal);
-        }
-
-        private void OnEditCustomer(object sender, RoutedEventArgs e)
-        {
-            var customerSearch = new SearchForCustomerWindow(dataStore)
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-            if (customerSearch.ShowDialog() == true)
-            {
-                EditCustomer(customerSearch.Customer);
+                var editor = new CustomerEditorWindow(selectedCustomer);
+                if (editor.ShowDialog() == true)
+                {
+                    Store.Instance.SaveData(); // Save changes
+                    RefreshCustomers();
+                }
             }
-        }
-
-        private void OnExitApplication(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
     }
 }

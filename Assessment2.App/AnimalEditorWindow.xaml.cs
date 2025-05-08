@@ -23,26 +23,24 @@ namespace Assessment2.App
             this.Title = "Edit Animal";
             Animal = animalToEdit;
             txtName.Text = Animal.Name;
-            txtSpecies.Text = Animal.Species;
+            txtType.Text = Animal.Type;
             txtBreed.Text = Animal.Breed;
             isEditMode = true;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtSpecies.Text))
+            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtType.Text) || string.IsNullOrWhiteSpace(txtBreed.Text))
             {
-                MessageBox.Show("Please enter at least a name and species.", "Missing Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please fill in all fields.", "Missing Info", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             Animal.Name = txtName.Text.Trim();
-            Animal.Species = txtSpecies.Text.Trim();
+            Animal.Type = txtType.Text.Trim();
             Animal.Breed = txtBreed.Text.Trim();
 
-            // Save data
-            Store.Instance.SaveData();
-
+            Store.Instance.SaveData(); // Save changes after animal edit
             this.DialogResult = true;
             this.Close();
         }
