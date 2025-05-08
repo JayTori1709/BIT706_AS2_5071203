@@ -1,11 +1,9 @@
-﻿using Assignment2.App.BusinessLayer;
+﻿using Assessment2.App;
+using Assessment2.Core;
 using System.Windows;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly Store dataStore = Store.Instance;
@@ -13,7 +11,7 @@ namespace Assignment2.App
         public MainWindow()
         {
             InitializeComponent();
-            Store.Instance.LoadData();
+            dataStore.LoadData();
         }
 
         private void EditAnimal(Animal? animal)
@@ -24,7 +22,10 @@ namespace Assignment2.App
                 Owner = this,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
-            window.ShowDialog();
+            if (window.ShowDialog() == true)
+            {
+                dataStore.SaveData(); // Save after adding/editing
+            }
         }
 
         private void EditCustomer(Customer? customer)
@@ -35,7 +36,10 @@ namespace Assignment2.App
                 Owner = this,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
-            window.ShowDialog();
+            if (window.ShowDialog() == true)
+            {
+                dataStore.SaveData(); // Save after adding/editing
+            }
         }
 
         private void OnAddAnimal(object sender, RoutedEventArgs e)
@@ -57,7 +61,6 @@ namespace Assignment2.App
             };
 
             if (customerSearch.ShowDialog() != true) return;
-
             var animalSearch = new SearchForAnimalWindow(dataStore)
             {
                 Customer = customerSearch.Customer,
@@ -66,9 +69,7 @@ namespace Assignment2.App
             };
 
             if (animalSearch.ShowDialog() == true)
-            {
                 EditAnimal(animalSearch.Animal);
-            }
         }
 
         private void OnEditCustomer(object sender, RoutedEventArgs e)
@@ -87,7 +88,7 @@ namespace Assignment2.App
 
         private void OnExitApplication(object sender, RoutedEventArgs e)
         {
-            Store.Instance.SaveData(); // Ensure data is saved before exit
+            dataStore.SaveData(); // Ensure data is saved on exit
             Close();
         }
     }
