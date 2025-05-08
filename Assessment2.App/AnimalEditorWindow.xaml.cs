@@ -1,4 +1,4 @@
-﻿using Assessment2.Core; // Access to the Animal class
+﻿using Assessment2.Core;
 using System.Windows;
 
 namespace Assessment2.App
@@ -9,7 +9,6 @@ namespace Assessment2.App
 
         private bool isEditMode;
 
-        // Constructor for adding a new animal
         public AnimalEditorWindow()
         {
             InitializeComponent();
@@ -18,7 +17,6 @@ namespace Assessment2.App
             isEditMode = false;
         }
 
-        // Constructor for editing an existing animal
         public AnimalEditorWindow(Animal animalToEdit)
         {
             InitializeComponent();
@@ -27,26 +25,23 @@ namespace Assessment2.App
             txtName.Text = Animal.Name;
             txtSpecies.Text = Animal.Species;
             txtBreed.Text = Animal.Breed;
-            txtAge.Text = Animal.Age.ToString();
             isEditMode = true;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            // Basic validation
-            if (string.IsNullOrWhiteSpace(txtName.Text) ||
-                string.IsNullOrWhiteSpace(txtSpecies.Text) ||
-                string.IsNullOrWhiteSpace(txtBreed.Text) ||
-                !int.TryParse(txtAge.Text, out int parsedAge))
+            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtSpecies.Text))
             {
-                MessageBox.Show("Please enter valid details. Age must be a number.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter at least a name and species.", "Missing Info", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             Animal.Name = txtName.Text.Trim();
             Animal.Species = txtSpecies.Text.Trim();
             Animal.Breed = txtBreed.Text.Trim();
-            Animal.Age = parsedAge;
+
+            // Save data
+            Store.Instance.SaveData();
 
             this.DialogResult = true;
             this.Close();

@@ -42,6 +42,9 @@ namespace Assessment2.App
             Customer.Name = txtName.Text.Trim();
             Customer.Phone = txtPhone.Text.Trim();
 
+            // Save to storage
+            Store.Instance.SaveData();
+
             this.DialogResult = true;
             this.Close();
         }

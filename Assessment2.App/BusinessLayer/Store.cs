@@ -1,122 +1,85 @@
-﻿using System.Collections.Generic;
+﻿using Assessment2.Core;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 
-namespace Assignment2.App.BusinessLayer
+namespace Assessment2.Data
 {
     public class Store
     {
-        private int lastAnimalId = 0;
-        private int lastCustomerId = 0;
+        private readonly string dataFolder = "data";
+        private readonly string customersFile = "data/customers.json";
+        private readonly string animalsFile = "data/animals.json";
+        private readonly string microchipsFile = "data/microchips.json";
 
-        public List<Animal> Animals { get; } = new();
+        public List<Customer> Customers { get; private set; } = new List<Customer>();
+        public List<Animal> Animals { get; private set; } = new List<Animal>();
+        public List<Microchip> Microchips { get; private set; } = new List<Microchip>();
 
-        public List<Customer> Customers { get; } = new();
-
-        public Animal AddAnimal()
+        public void AddCustomer(Customer customer)
         {
-            var animal = new Animal
-            {
-                Id = ++lastAnimalId,
-            };
-            return animal;
+            Customers.Add(customer);
+            Save(); // Auto-save
         }
 
-        public Customer AddCustomer()
+        public void AddAnimal(Animal animal)
         {
-            var customer = new Customer
-            {
-                Id = ++lastCustomerId,
-            };
-            return customer;
+            Animals.Add(animal);
+            Save(); // Auto-save
         }
 
-        public IEnumerable<Animal> FindAnimals(int ownerId)
+        public void AddMicrochip(Microchip microchip)
         {
-            var animals = this.Animals
-                .Where(a => a.OwnerId == ownerId);
-            return animals;
+            Microchips.Add(microchip);
+            Save(); // Auto-save
         }
 
-        public IEnumerable<Customer> FindCustomers(string name)
+        public void RemoveCustomer(Customer customer)
         {
-            var customers = Customers
-                .Where(c => c.FirstName?.Contains(name, System.StringComparison.InvariantCultureIgnoreCase) == true
-                         || c.Surname?.Contains(name, System.StringComparison.InvariantCultureIgnoreCase) == true);
-            return customers;
+            Customers.Remove(customer);
+            Save(); // Auto-save
         }
 
-        public void Load(string path)
+        public void RemoveAnimal(Animal animal)
         {
-            var animalsPath = Path.Combine(path, "animals.csv");
-            var customersPath = Path.Combine(path, "customers.csv");
-
-            if (File.Exists(animalsPath)) LoadAnimals(animalsPath);
-            if (File.Exists(customersPath)) LoadCustomers(customersPath);
+            Animals.Remove(animal);
+            Save(); // Auto-save
         }
 
-        public void Save(string path)
+        public void RemoveMicrochip(Microchip microchip)
         {
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            var animalsPath = Path.Combine(path, "animals.csv");
-            var customersPath = Path.Combine(path, "customers.csv");
-
-            SaveAnimals(animalsPath);
-            SaveCustomers(customersPath);
+            Microchips.Remove(microchip);
+            Save(); // Auto-save
         }
 
-        private void LoadAnimals(string path)
+        public void Save()
         {
-            Animals.Clear();
-            using var stream = File.OpenRead(path);
-            using var reader = new StreamReader(stream);
-            var line = reader.ReadLine();
-            line = reader.ReadLine();   // First line is a header - need to skip it
-            while (!string.IsNullOrEmpty(line))
-            {
-                Animals.Add(Animal.FromCsv(line));
-                line = reader.ReadLine();
-            }
+            if (!Directory.Exists(dataFolder))
+                Directory.CreateDirectory(dataFolder);
 
-            lastAnimalId = Animals.Any() ? Animals.Max(a => a.Id) : 0;
+            File.WriteAllText(customersFile, JsonSerializer.Serialize(Customers));
+            File.WriteAllText(animalsFile, JsonSerializer.Serialize(Animals));
+            File.WriteAllText(microchipsFile, JsonSerializer.Serialize(Microchips));
         }
 
-        private void LoadCustomers(string path)
+        public void Load()
         {
-            Customers.Clear();
-            using var stream = File.OpenRead(path);
-            using var reader = new StreamReader(stream);
-            var line = reader.ReadLine();
-            line = reader.ReadLine();   // First line is a header - need to skip it
-            while (!string.IsNullOrEmpty(line))
-            {
-                Customers.Add(Customer.FromCsv(line));
-                line = reader.ReadLine();
-            }
+            if (File.Exists(customersFile))
+                Customers = JsonSerializer.Deserialize<List<Customer>>(File.ReadAllText(customersFile)) ?? new List<Customer>();
+            else
+                Customers = new List<Customer>();
 
-            lastCustomerId = Animals.Any() ? Animals.Max(a => a.Id) : 0;
-        }
+            if (File.Exists(animalsFile))
+                Animals = JsonSerializer.Deserialize<List<Animal>>(File.ReadAllText(animalsFile)) ?? new List<Animal>();
+            else
+                Animals = new List<Animal>();
 
-        private void SaveAnimals(string path)
-        {
-            using var stream = File.Create(path);
-            using var writer = new StreamWriter(stream);
-            Animal.WriteHeaderToCsv(writer);
-            foreach (var animal in Animals)
-            {
-                animal.WriteToCsv(writer);
-            }
-        }
-
-        private void SaveCustomers(string path)
-        {
-            using var stream = File.Create(path);
-            using var writer = new StreamWriter(stream);
-            Customer.WriteHeaderToCsv(writer);
-            foreach (var customer in Customers)
-            {
-                customer.WriteToCsv(writer);
-            }
+            if (File.Exists(microchipsFile))
+                Microchips = JsonSerializer.Deserialize<List<Microchip>>(File.ReadAllText(microchipsFile)) ?? new List<Microchip>();
+            else
+                Microchips = new List<Microchip>();
         }
     }
 }

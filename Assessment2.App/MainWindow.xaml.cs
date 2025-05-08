@@ -13,7 +13,30 @@ namespace Assignment2.App
         public MainWindow()
         {
             InitializeComponent();
-            dataStore.Load("data");
+            Store.Instance.LoadData();
+        }
+
+        public void SaveData()
+        {
+            var data = new
+            {
+                Customers = Customers,
+                Animals = Animals,
+                Microchips = Microchips
+            };
+            File.WriteAllText(GetFilePath(), JsonSerializer.Serialize(data));
+        }
+
+        public void LoadData()
+        {
+            if (File.Exists(GetFilePath()))
+            {
+                var json = File.ReadAllText(GetFilePath());
+                var data = JsonSerializer.Deserialize<SaveData>(json);
+                Customers = data?.Customers ?? new List<Customer>();
+                Animals = data?.Animals ?? new List<Animal>();
+                Microchips = data?.Microchips ?? new List<Microchip>();
+            }
         }
 
         private void EditAnimal(Animal? animal)
