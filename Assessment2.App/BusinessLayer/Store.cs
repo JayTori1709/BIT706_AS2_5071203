@@ -1,85 +1,68 @@
-﻿using Assessment2.Core;
+﻿// Store.cs
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
+using Assessment2.Core;
 
-namespace Assessment2.Data
+namespace Assessment2.App
 {
     public class Store
     {
-        private readonly string dataFolder = "data";
-        private readonly string customersFile = "data/customers.json";
-        private readonly string animalsFile = "data/animals.json";
-        private readonly string microchipsFile = "data/microchips.json";
-
         public List<Customer> Customers { get; private set; } = new List<Customer>();
         public List<Animal> Animals { get; private set; } = new List<Animal>();
         public List<Microchip> Microchips { get; private set; } = new List<Microchip>();
 
+        // Load sample data
+        public void Load()
+        {
+            Customers = new List<Customer>
+            {
+                new Customer("John", "Doe", "john.doe@example.com", "123-4567"),
+                new Customer("Jane", "Smith", "jane.smith@example.com", "987-6543")
+            };
+
+            Animals = new List<Animal>
+            {
+                new Animal("Buddy", "Dog", "Labrador", new DateTime(2019, 5, 1), Customers[0]),
+                new Animal("Whiskers", "Cat", "Siamese", new DateTime(2020, 3, 12), Customers[1])
+            };
+
+            Microchips = new List<Microchip>
+            {
+                new Microchip("MC12345", Animals[0]),
+                new Microchip("MC67890", Animals[1])
+            };
+        }
+
         public void AddCustomer(Customer customer)
         {
-            Customers.Add(customer);
-            Save(); // Auto-save
-        }
-
-        public void AddAnimal(Animal animal)
-        {
-            Animals.Add(animal);
-            Save(); // Auto-save
-        }
-
-        public void AddMicrochip(Microchip microchip)
-        {
-            Microchips.Add(microchip);
-            Save(); // Auto-save
+            if (!Customers.Contains(customer))
+            {
+                Customers.Add(customer);
+            }
         }
 
         public void RemoveCustomer(Customer customer)
         {
+            Animals.RemoveAll(a => a.Owner == customer);
             Customers.Remove(customer);
-            Save(); // Auto-save
         }
 
-        public void RemoveAnimal(Animal animal)
+        public void UpdateCustomer(Customer oldCustomer, Customer updatedCustomer)
         {
-            Animals.Remove(animal);
-            Save(); // Auto-save
-        }
-
-        public void RemoveMicrochip(Microchip microchip)
-        {
-            Microchips.Remove(microchip);
-            Save(); // Auto-save
-        }
-
-        public void Save()
-        {
-            if (!Directory.Exists(dataFolder))
-                Directory.CreateDirectory(dataFolder);
-
-            File.WriteAllText(customersFile, JsonSerializer.Serialize(Customers));
-            File.WriteAllText(animalsFile, JsonSerializer.Serialize(Animals));
-            File.WriteAllText(microchipsFile, JsonSerializer.Serialize(Microchips));
-        }
-
-        public void Load()
-        {
-            if (File.Exists(customersFile))
-                Customers = JsonSerializer.Deserialize<List<Customer>>(File.ReadAllText(customersFile)) ?? new List<Customer>();
-            else
-                Customers = new List<Customer>();
-
-            if (File.Exists(animalsFile))
-                Animals = JsonSerializer.Deserialize<List<Animal>>(File.ReadAllText(animalsFile)) ?? new List<Animal>();
-            else
-                Animals = new List<Animal>();
-
-            if (File.Exists(microchipsFile))
-                Microchips = JsonSerializer.Deserialize<List<Microchip>>(File.ReadAllText(microchipsFile)) ?? new List<Microchip>();
-            else
-                Microchips = new List<Microchip>();
+            var index = Customers.IndexOf(oldCustomer);
+            if (index != -1)
+            {
+                Customers[index] = updatedCustomer;
+                foreach (var animal in Animals)
+                {
+                    if (animal.Owner == oldCustomer)
+                    {
+                        animal.Owner = updatedCustomer;
+                    }
+                }
+            }
         }
     }
 }

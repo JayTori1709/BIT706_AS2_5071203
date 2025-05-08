@@ -1,46 +1,94 @@
-﻿using Assessment2.Core;
+﻿using Assignment2.App.BusinessLayer;
 using System.Windows;
 
-namespace Assessment2.App
+namespace Assignment2.App
 {
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly Store dataStore = Store.Instance;
+
         public MainWindow()
         {
             InitializeComponent();
-            Store.Instance.LoadData(); // Load data on app start
-            RefreshCustomers();
+            Store.Instance.LoadData();
         }
 
-        private void RefreshCustomers()
+        private void EditAnimal(Animal? animal)
         {
-            CustomerListView.ItemsSource = null;
-            CustomerListView.ItemsSource = Store.Instance.Customers;
-        }
-
-        private void AddCustomer_Click(object sender, RoutedEventArgs e)
-        {
-            var editor = new CustomerEditorWindow();
-            if (editor.ShowDialog() == true)
+            var window = new AnimalEditorWindow(dataStore)
             {
-                Store.Instance.Customers.Add(editor.Customer);
-                Store.Instance.SaveData(); // Save changes
-                RefreshCustomers();
+                Animal = animal,
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            window.ShowDialog();
+        }
+
+        private void EditCustomer(Customer? customer)
+        {
+            var window = new CustomerEditorWindow(dataStore)
+            {
+                Customer = customer,
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            window.ShowDialog();
+        }
+
+        private void OnAddAnimal(object sender, RoutedEventArgs e)
+        {
+            EditAnimal(null);
+        }
+
+        private void OnAddCustomer(object sender, RoutedEventArgs e)
+        {
+            EditCustomer(null);
+        }
+
+        private void OnEditAnimal(object sender, RoutedEventArgs e)
+        {
+            var customerSearch = new SearchForCustomerWindow(dataStore)
+            {
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            if (customerSearch.ShowDialog() != true) return;
+
+            var animalSearch = new SearchForAnimalWindow(dataStore)
+            {
+                Customer = customerSearch.Customer,
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            if (animalSearch.ShowDialog() == true)
+            {
+                EditAnimal(animalSearch.Animal);
             }
         }
 
-        private void EditCustomer_Click(object sender, RoutedEventArgs e)
+        private void OnEditCustomer(object sender, RoutedEventArgs e)
         {
-            var selectedCustomer = (Customer)CustomerListView.SelectedItem;
-            if (selectedCustomer != null)
+            var customerSearch = new SearchForCustomerWindow(dataStore)
             {
-                var editor = new CustomerEditorWindow(selectedCustomer);
-                if (editor.ShowDialog() == true)
-                {
-                    Store.Instance.SaveData(); // Save changes
-                    RefreshCustomers();
-                }
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            if (customerSearch.ShowDialog() == true)
+            {
+                EditCustomer(customerSearch.Customer);
             }
+        }
+
+        private void OnExitApplication(object sender, RoutedEventArgs e)
+        {
+            Store.Instance.SaveData(); // Ensure data is saved before exit
+            Close();
         }
     }
 }
