@@ -1,10 +1,7 @@
 ﻿// Store.cs
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Assessment2.App.BusinessLayer;
-
 
 namespace Assessment2.App.BusinessLayer
 {
@@ -15,33 +12,37 @@ namespace Assessment2.App.BusinessLayer
         public List<Microchip> Microchips { get; private set; } = new List<Microchip>();
 
         // Load sample data
-        public void Load()
+        public void LoadData() // Renamed to be consistent with MainWindow
         {
-            Customers = new List<Customer>
+            Customers.AddRange(new List<Customer>
             {
-                new Customer("John", "Doe", "john.doe@example.com", "123-4567"),
-                new Customer("Jane", "Smith", "jane.smith@example.com", "987-6543")
-            };
+                new Customer { FirstName = "John", Surname = "Doe", PhoneNumber = "123-4567", Address = "Some Address" },
+                new Customer { FirstName = "Jane", Surname = "Smith", PhoneNumber = "987-6543", Address = "Another Address" }
+            });
 
-            Animals = new List<Animal>
+            Animals.AddRange(new List<Animal>
             {
-                new Animal("Buddy", "Dog", "Labrador", new DateTime(2019, 5, 1), Customers[0]),
-                new Animal("Whiskers", "Cat", "Siamese", new DateTime(2020, 3, 12), Customers[1])
-            };
+                new Animal { Name = "Buddy", Type = "Dog", Breed = "Labrador", OwnerId = Customers[0].Id },
+                new Animal { Name = "Whiskers", Type = "Cat", Breed = "Siamese", OwnerId = Customers[1].Id }
+            });
 
-            Microchips = new List<Microchip>
+            Microchips.AddRange(new List<Microchip>
             {
-                new Microchip("MC12345", Animals[0]),
-                new Microchip("MC67890", Animals[1])
-            };
+                new Microchip { ChipId = "MC12345" },
+                new Microchip { ChipId = "MC67890" }
+            });
+
+            // You might need to link Microchips to Animals based on some logic
         }
 
         public static Store Instance { get; } = new Store();
 
+        private Store() { } // Private constructor for singleton pattern
+
         public void SaveData()
-{
-    // Here, save the data to a file or database as needed
-}
+        {
+            // Here, save the data to a file or database as needed
+        }
 
         public void AddCustomer(Customer customer)
         {
@@ -53,7 +54,7 @@ namespace Assessment2.App.BusinessLayer
 
         public void RemoveCustomer(Customer customer)
         {
-            Animals.RemoveAll(a => a.Owner == customer);
+            Animals.RemoveAll(a => a.OwnerId == customer.Id);
             Customers.Remove(customer);
         }
 
@@ -65,12 +66,19 @@ namespace Assessment2.App.BusinessLayer
                 Customers[index] = updatedCustomer;
                 foreach (var animal in Animals)
                 {
-                    if (animal.Owner == oldCustomer)
+                    if (animal.OwnerId == oldCustomer.Id)
                     {
-                        animal.Owner = updatedCustomer;
+                        animal.OwnerId = updatedCustomer.Id;
                     }
                 }
             }
         }
+
+        public List<Animal> FindAnimals(int customerId)
+        {
+            return Animals.Where(a => a.OwnerId == customerId).ToList();
+        }
+
+        // You'll likely need methods to add, remove, and update animals as well.
     }
 }

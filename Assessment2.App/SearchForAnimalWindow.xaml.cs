@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿// SearchForAnimalWindow.xaml.cs
+using System.Windows;
 using System.Windows.Controls;
 using Assessment2.App.BusinessLayer;
 
-namespace Assessment2.App.BusinessLayer
+namespace Assessment2.App
 {
     public partial class SearchForAnimalWindow : Window
     {
@@ -23,10 +24,18 @@ namespace Assessment2.App.BusinessLayer
             set
             {
                 customer = value;
-                var animals = dataStore.FindAnimals(customer?.Id ?? 0);
-                foreach (var animal in animals)
+                if (customer != null)
                 {
-                    searchResults.Items.Add(new ListBoxItem { Content = animal });
+                    var animals = dataStore.FindAnimals(customer.Id);
+                    searchResults.Items.Clear();
+                    foreach (var animal in animals)
+                    {
+                        searchResults.Items.Add(new ListBoxItem { Content = animal });
+                    }
+                }
+                else
+                {
+                    searchResults.Items.Clear();
                 }
             }
         }
@@ -39,10 +48,12 @@ namespace Assessment2.App.BusinessLayer
 
         private void OnSelect(object sender, RoutedEventArgs e)
         {
-            if (searchResults.SelectedItem == null) return;
-            DialogResult = true;
-            Animal = ((ListBoxItem)searchResults.SelectedItem).Content as Animal;
-            Close();
+            if (searchResults.SelectedItem is ListBoxItem selectedItem)
+            {
+                DialogResult = true;
+                Animal = selectedItem.Content as Animal;
+                Close();
+            }
         }
     }
 }

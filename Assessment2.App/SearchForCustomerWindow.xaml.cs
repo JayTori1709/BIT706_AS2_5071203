@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿// SearchForCustomerWindow.xaml.cs
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,14 +9,16 @@ namespace Assessment2.App
 {
     public partial class SearchForCustomerWindow : Window
     {
-        public Customer SelectedCustomer { get; private set; }
+        public Customer? SelectedCustomer { get; private set; } // Made nullable
 
         private List<Customer> allCustomers;
+        private readonly Store dataStore; // Add dataStore field
 
-        public SearchForCustomerWindow()
+        public SearchForCustomerWindow(Store dataStore) // Constructor now takes Store
         {
             InitializeComponent();
-            allCustomers = Store.Instance.Customers;
+            this.dataStore = dataStore; // Initialize dataStore
+            allCustomers = dataStore.Customers;
             customerListBox.ItemsSource = allCustomers;
         }
 
@@ -23,9 +26,9 @@ namespace Assessment2.App
         {
             string query = searchBox.Text.ToLower();
             var filtered = allCustomers
-                .Where(c => c.FirstName.ToLower().Contains(query)
-                         || c.Surname.ToLower().Contains(query)
-                         || c.PhoneNumber.ToLower().Contains(query))
+                .Where(c => c.FirstName?.ToLower().Contains(query) == true ||
+                            c.Surname?.ToLower().Contains(query) == true ||
+                            c.PhoneNumber?.ToLower().Contains(query) == true)
                 .ToList();
             customerListBox.ItemsSource = filtered;
         }

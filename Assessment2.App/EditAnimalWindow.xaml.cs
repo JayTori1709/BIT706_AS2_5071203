@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// EditAnimalWindow.xaml.cs
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Assessment2.App;
-using Assessment2.App.BusinessLayer; 
+using Assessment2.App.BusinessLayer;
+
 namespace Assessment2.App
 {
     /// <summary>
@@ -20,9 +9,27 @@ namespace Assessment2.App
     /// </summary>
     public partial class EditAnimalWindow : Window
     {
-        public EditAnimalWindow()
+        public Animal? Animal { get; set; }
+        private readonly Store dataStore;
+
+        public EditAnimalWindow(Store dataStore, Animal? animal = null)
         {
             InitializeComponent();
+            this.dataStore = dataStore;
+            Animal = animal ?? new Animal();
+            DataContext = Animal; // For data binding in XAML
+        }
+
+        private void OnSave(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
+        }
+
+        private void OnCancel(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }

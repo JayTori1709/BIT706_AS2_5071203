@@ -1,66 +1,33 @@
-﻿using Assessment2.App.BusinessLayer; using Assessment2.App;
+﻿// AnimalEditorWindow.xaml.cs
 using System.Windows;
+using Assessment2.App.BusinessLayer;
 
 namespace Assessment2.App
 {
+
     public partial class AnimalEditorWindow : Window
     {
-        public Animal Animal { get; private set; }
+        public Animal? Animal { get; set; }
+        private readonly Store dataStore;
 
-        private bool isEditMode;
-
-        public AnimalEditorWindow()
+        public AnimalEditorWindow(Store dataStore, Animal? animal = null)
         {
             InitializeComponent();
-            this.Title = "Add Animal";
-            Animal = new Animal();
-            isEditMode = false;
+            this.dataStore = dataStore;
+            Animal = animal ?? new Animal();
+            DataContext = Animal; // For data binding in XAML
         }
 
-        public AnimalEditorWindow(Animal animalToEdit)
+        private void OnSave(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            this.Title = "Edit Animal";
-            Animal = animalToEdit;
-            txtName.Text = Animal.Name;
-            txtType.Text = Animal.Type;
-            txtBreed.Text = Animal.Breed;
-            isEditMode = true;
+            DialogResult = true;
+            Close();
         }
 
-        private void OnFindCustomer(object sender, RoutedEventArgs e)
-{
-    // Open customer search dialog and select a customer
-    var searchWindow = new SearchForCustomerWindow();
-if (searchWindow.ShowDialog() == true)
-{
-    Animal.Owner = searchWindow.SelectedCustomer;
-    owner.Text = Animal.Owner.ToString();
-}
-}
-
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private void OnCancel(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtType.Text) || string.IsNullOrWhiteSpace(txtBreed.Text))
-            {
-                MessageBox.Show("Please fill in all fields.", "Missing Info", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            Animal.Name = txtName.Text.Trim();
-            Animal.Type = txtType.Text.Trim();
-            Animal.Breed = txtBreed.Text.Trim();
-
-            Store.Instance.SaveData(); // Save changes after animal edit
-            this.DialogResult = true;
-            this.Close();
-        }
-
-       private void Cancel_Click(object sender, RoutedEventArgs e)
-
-        {
-            this.DialogResult = false;
-            this.Close();
+            DialogResult = false;
+            Close();
         }
     }
 }
