@@ -44,6 +44,13 @@ namespace Assessment2.App.BusinessLayer
             // Here, save the data to a file or database as needed
         }
 
+        public void RemoveAnimal(Animal animal)
+{
+    Animals.Remove(animal);
+    SaveData(); // or Save(), whichever you're using
+}
+
+
         public void AddCustomer(Customer customer)
         {
             if (!Customers.Contains(customer))
