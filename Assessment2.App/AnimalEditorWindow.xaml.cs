@@ -1,116 +1,61 @@
-﻿using Assignment2.App.BusinessLayer;
-using System.Linq;
+﻿using Assessment2.Core; // Access to the Animal class
 using System.Windows;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
-    /// <summary>
-    /// Interaction logic for AnimalEditorWindow.xaml
-    /// </summary>
     public partial class AnimalEditorWindow : Window
     {
-        private readonly Store dataStore;
-        private Animal? animal;
-        private Customer? customer;
+        public Animal Animal { get; private set; }
 
-        public AnimalEditorWindow(Store dataStore)
+        private bool isEditMode;
+
+        // Constructor for adding a new animal
+        public AnimalEditorWindow()
         {
             InitializeComponent();
-            this.dataStore = dataStore;
+            this.Title = "Add Animal";
+            Animal = new Animal();
+            isEditMode = false;
         }
 
-        public Animal? Animal
+        // Constructor for editing an existing animal
+        public AnimalEditorWindow(Animal animalToEdit)
         {
-            get => animal;
-            set
-            {
-                customer = null;
-                animal = value;
-                animalName.Text = animal?.Name ?? string.Empty;
-                type.Text = animal?.Type ?? string.Empty;
-                sex.Text = animal?.Sex ?? string.Empty;
-                breed.Text = animal?.Breed ?? string.Empty;
-                owner.Text = string.Empty;
-
-                if (animal == null) return;
-                customer = dataStore.Customers.FirstOrDefault(c => c.Id == animal.OwnerId);
-                owner.Text = customer?.ToString() ?? string.Empty;
-            }
+            InitializeComponent();
+            this.Title = "Edit Animal";
+            Animal = animalToEdit;
+            txtName.Text = Animal.Name;
+            txtSpecies.Text = Animal.Species;
+            txtBreed.Text = Animal.Breed;
+            txtAge.Text = Animal.Age.ToString();
+            isEditMode = true;
         }
 
-        private bool AddNewAnimal()
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
-            var animal = dataStore.AddAnimal();
-            animal.Name = animalName.Text;
-            animal.Type = type.Text;
-            animal.Breed = breed.Text;
-            animal.Sex = sex.Text;
-            animal.OwnerId = customer?.Id ?? 0;
-            if (!animal.CheckIfValid())
+            // Basic validation
+            if (string.IsNullOrWhiteSpace(txtName.Text) ||
+                string.IsNullOrWhiteSpace(txtSpecies.Text) ||
+                string.IsNullOrWhiteSpace(txtBreed.Text) ||
+                !int.TryParse(txtAge.Text, out int parsedAge))
             {
-                MessageBox.Show(
-                    "Cannot save animal - some information is missing",
-                    "Save error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                return false;
+                MessageBox.Show("Please enter valid details. Age must be a number.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            dataStore.Animals.Add(animal);
-            dataStore.Save("data");
-            return true;
+            Animal.Name = txtName.Text.Trim();
+            Animal.Species = txtSpecies.Text.Trim();
+            Animal.Breed = txtBreed.Text.Trim();
+            Animal.Age = parsedAge;
+
+            this.DialogResult = true;
+            this.Close();
         }
 
-        private void OnCancel(object sender, RoutedEventArgs e)
+        private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Close();
-        }
-
-        private void OnFindCustomer(object sender, RoutedEventArgs e)
-        {
-            var window = new SearchForCustomerWindow(dataStore)
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-            if (window.ShowDialog() == true)
-            {
-                customer = window.Customer;
-                owner.Text = customer?.ToString() ?? string.Empty;
-            }
-        }
-
-        private void OnSave(object sender, RoutedEventArgs e)
-        {
-            if (Animal != null)
-            {
-                if (UpdateAnimal()) Close();
-            }
-            else
-            {
-                if (AddNewAnimal()) Close();
-            }
-        }
-
-        private bool UpdateAnimal()
-        {
-            Animal!.Name = animalName.Text;
-            Animal.Type = type.Text;
-            Animal.Breed = breed.Text;
-            Animal.Sex = sex.Text;
-            Animal.OwnerId = customer?.Id ?? 0;
-            if (!Animal.CheckIfValid())
-            {
-                MessageBox.Show(
-                    "Cannot save animal - some information is missing",
-                    "Save error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                return false;
-            }
-
-            dataStore.Save("data");
-            return true;
+            this.DialogResult = false;
+            this.Close();
         }
     }
 }

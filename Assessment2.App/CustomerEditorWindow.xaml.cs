@@ -1,74 +1,55 @@
-﻿using System.Windows;
-using Assessment2.App.Models;
-using Assessment2.App.BusinessLayer;
+﻿using Assessment2.Core; // For accessing the Customer class
+using System.Windows;
 
 namespace Assessment2.App
 {
     public partial class CustomerEditorWindow : Window
     {
-        private readonly Store dataStore;
-        private Customer? customer;
+        public Customer Customer { get; private set; }
 
-        public CustomerEditorWindow(Store dataStore)
+        private bool isEditMode;
+
+        // Constructor for creating a new customer
+        public CustomerEditorWindow()
         {
             InitializeComponent();
-            this.dataStore = dataStore;
+            this.Title = "Add Customer";
+            Customer = new Customer();
+            isEditMode = false;
         }
 
-        public Customer? Customer
+        // Constructor for editing an existing customer
+        public CustomerEditorWindow(Customer customerToEdit)
         {
-            get => customer;
-            set
-            {
-                customer = value;
-                firstName.Text = customer?.FirstName ?? "";
-                surname.Text = customer?.Surname ?? "";
-                phoneNumber.Text = customer?.PhoneNumber ?? "";
-                address.Text = customer?.Address ?? "";
-            }
+            InitializeComponent();
+            this.Title = "Edit Customer";
+            Customer = customerToEdit;
+            txtName.Text = Customer.Name;
+            txtPhone.Text = Customer.Phone;
+            isEditMode = true;
         }
 
-        private void OnSave(object sender, RoutedEventArgs e)
+        private void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (customer == null)
+            // Basic input validation
+            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPhone.Text))
             {
-                var newCustomer = new Customer
-                {
-                    FirstName = firstName.Text,
-                    Surname = surname.Text,
-                    PhoneNumber = phoneNumber.Text,
-                    Address = address.Text
-                };
-
-                if (!newCustomer.CheckIfValid())
-                {
-                    MessageBox.Show("Invalid data.");
-                    return;
-                }
-
-                dataStore.AddCustomer(newCustomer);
-            }
-            else
-            {
-                customer.FirstName = firstName.Text;
-                customer.Surname = surname.Text;
-                customer.PhoneNumber = phoneNumber.Text;
-                customer.Address = address.Text;
-
-                if (!customer.CheckIfValid())
-                {
-                    MessageBox.Show("Invalid data.");
-                    return;
-                }
+                MessageBox.Show("Please enter both a name and a phone number.", "Missing Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            dataStore.SaveData("data.json");
-            Close();
+            // Assign values to the Customer object
+            Customer.Name = txtName.Text.Trim();
+            Customer.Phone = txtPhone.Text.Trim();
+
+            this.DialogResult = true;
+            this.Close();
         }
 
-        private void OnCancel(object sender, RoutedEventArgs e)
+        private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            this.DialogResult = false;
+            this.Close();
         }
     }
 }
