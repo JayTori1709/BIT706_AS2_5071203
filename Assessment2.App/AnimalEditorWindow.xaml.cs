@@ -28,6 +28,17 @@ namespace Assessment2.App
             isEditMode = true;
         }
 
+        private void OnFindCustomer(object sender, RoutedEventArgs e)
+{
+    // Open customer search dialog and select a customer
+    var searchWindow = new SearchForCustomerWindow();
+if (searchWindow.ShowDialog() == true)
+{
+    Animal.Owner = searchWindow.SelectedCustomer;
+    owner.Text = Animal.Owner.ToString();
+}
+}
+
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtType.Text) || string.IsNullOrWhiteSpace(txtBreed.Text))
@@ -45,7 +56,8 @@ namespace Assessment2.App
             this.Close();
         }
 
-        private void Cancel_Click(object sender, RoutedEventArgs e)
+       private void Cancel_Click(object sender, RoutedEventArgs e)
+
         {
             this.DialogResult = false;
             this.Close();

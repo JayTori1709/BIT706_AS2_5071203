@@ -1,12 +1,9 @@
-﻿using Assessment2.App.BusinessLayer;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using Assessment2.App.BusinessLayer;
 
-namespace Assessment2.App
+namespace Assessment2.App.BusinessLayer
 {
-    /// <summary>
-    /// Interaction logic for SearchForAnimalWindow.xaml
-    /// </summary>
     public partial class SearchForAnimalWindow : Window
     {
         private readonly Store dataStore;

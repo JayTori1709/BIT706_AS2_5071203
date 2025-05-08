@@ -1,4 +1,4 @@
-﻿using As.App.BusinessLayer;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,44 +6,47 @@ using Assessment2.App.BusinessLayer;
 
 namespace Assessment2.App
 {
-    /// <summary>
-    /// Interaction logic for SearchForCustomerWindow.xaml
-    /// </summary>
     public partial class SearchForCustomerWindow : Window
     {
-        private readonly Store dataStore;
+        public Customer SelectedCustomer { get; private set; }
 
-        public SearchForCustomerWindow(Store dataStore)
+        private List<Customer> allCustomers;
+
+        public SearchForCustomerWindow()
         {
             InitializeComponent();
-            this.dataStore = dataStore;
+            allCustomers = Store.Instance.Customers;
+            customerListBox.ItemsSource = allCustomers;
         }
 
-        public Customer? Customer { get; set; }
-
-        private void OnCancel(object sender, RoutedEventArgs e)
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            DialogResult = false;
-            Close();
+            string query = searchBox.Text.ToLower();
+            var filtered = allCustomers
+                .Where(c => c.FirstName.ToLower().Contains(query)
+                         || c.Surname.ToLower().Contains(query)
+                         || c.PhoneNumber.ToLower().Contains(query))
+                .ToList();
+            customerListBox.ItemsSource = filtered;
         }
 
-        private void OnSearchChanged(object sender, TextChangedEventArgs e)
+        private void Select_Click(object sender, RoutedEventArgs e)
         {
-            searchResults.Items.Clear();
-            var searchText = searchName.Text;
-            if (searchText.Length < 3) return;
-            var customers = dataStore.FindCustomers(searchText);
-            foreach (var customer in customers.OrderBy(c => c.Surname).ThenBy(c => c.FirstName))
+            if (customerListBox.SelectedItem is Customer customer)
             {
-                searchResults.Items.Add(new ListBoxItem { Content = customer });
+                SelectedCustomer = customer;
+                DialogResult = true;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("Please select a customer.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
-        private void OnSelect(object sender, RoutedEventArgs e)
+        private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            if (searchResults.SelectedItem == null) return;
-            DialogResult = true;
-            Customer = ((ListBoxItem)searchResults.SelectedItem).Content as Customer;
+            DialogResult = false;
             Close();
         }
     }

@@ -1,58 +1,38 @@
-﻿using Assessment2.App.BusinessLayer; namespace Assessment2.App.BusinessLayer // For accessing the Customer class
-using System.Windows;
+﻿using System.Windows;
+using Assessment2.App.BusinessLayer;
 
-namespace Assessment2.App
+namespace Assessment2.App.BusinessLayer
 {
     public partial class CustomerEditorWindow : Window
     {
         public Customer Customer { get; private set; }
 
-        private bool isEditMode;
-
-        // Constructor for creating a new customer
-        public CustomerEditorWindow()
+        public CustomerEditorWindow(Customer? customer = null)
         {
             InitializeComponent();
-            this.Title = "Add Customer";
-            Customer = new Customer();
-            isEditMode = false;
+            Customer = customer ?? new Customer();
+
+            firstName.Text = Customer.FirstName ?? string.Empty;
+            surname.Text = Customer.Surname ?? string.Empty;
+            phoneNumber.Text = Customer.PhoneNumber ?? string.Empty;
+            address.Text = Customer.Address ?? string.Empty;
+            this.DataContext = Customer;
         }
 
-        // Constructor for editing an existing customer
-        public CustomerEditorWindow(Customer customerToEdit)
+        private void OnSave(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            this.Title = "Edit Customer";
-            Customer = customerToEdit;
-            txtName.Text = Customer.Name;
-            txtPhone.Text = Customer.Phone;
-            isEditMode = true;
+            Customer.FirstName = firstName.Text;
+            Customer.Surname = surname.Text;
+            Customer.PhoneNumber = phoneNumber.Text;
+            Customer.Address = address.Text;
+            DialogResult = true;
+            Close();
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private void OnCancel(object sender, RoutedEventArgs e)
         {
-            // Basic input validation
-            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtPhone.Text))
-            {
-                MessageBox.Show("Please enter both a name and a phone number.", "Missing Info", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            // Assign values to the Customer object
-            Customer.Name = txtName.Text.Trim();
-            Customer.Phone = txtPhone.Text.Trim();
-
-            // Save to storage
-            Store.Instance.SaveData();
-
-            this.DialogResult = true;
-            this.Close();
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-            this.Close();
+            DialogResult = false;
+            Close();
         }
     }
 }

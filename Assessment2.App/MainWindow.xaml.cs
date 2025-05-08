@@ -1,7 +1,7 @@
-﻿using Assessment2.App.BusinessLayer; 
-using System.Windows;
+﻿using System.Windows;
+using Assessment2.App.BusinessLayer; 
 
-namespace Assessment2.App
+namespace Assessment2.App.BusinessLayer
 {
     public partial class MainWindow : Window
     {
@@ -27,29 +27,34 @@ namespace Assessment2.App
             }
         }
 
-        private void EditCustomer(Customer? customer)
+      private void EditCustomer_Click(object sender, RoutedEventArgs e)
+{
+    var selectedCustomer = lstCustomers.SelectedItem as Customer;
+    if (selectedCustomer != null)
+    {
+        var customerEditor = new CustomerEditorWindow(selectedCustomer);
+        if (customerEditor.ShowDialog() == true)
         {
-            var window = new CustomerEditorWindow(dataStore)
-            {
-                Customer = customer,
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-            if (window.ShowDialog() == true)
-            {
-                dataStore.SaveData(); // Save after adding/editing
-            }
+            Store.Instance.UpdateCustomer(selectedCustomer, customerEditor.Customer);
+            lstCustomers.Items.Refresh(); // Refresh the list
         }
+    }
+}
 
         private void OnAddAnimal(object sender, RoutedEventArgs e)
         {
             EditAnimal(null);
         }
 
-        private void OnAddCustomer(object sender, RoutedEventArgs e)
-        {
-            EditCustomer(null);
-        }
+       private void AddCustomer_Click(object sender, RoutedEventArgs e)
+{
+    var customerEditor = new CustomerEditorWindow();
+    if (customerEditor.ShowDialog() == true)
+    {
+        Store.Instance.AddCustomer(customerEditor.Customer);
+        lstCustomers.Items.Refresh(); // Refresh the list
+    }
+}
 
         private void OnEditAnimal(object sender, RoutedEventArgs e)
         {

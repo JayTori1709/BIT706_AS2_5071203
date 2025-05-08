@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Assessment2.App.BusinessLayer;
- 
-namespace Assessment2.App
+
+
+namespace Assessment2.App.BusinessLayer
 {
     public class Store
     {
@@ -34,6 +35,13 @@ namespace Assessment2.App
                 new Microchip("MC67890", Animals[1])
             };
         }
+
+        public static Store Instance { get; } = new Store();
+
+        public void SaveData()
+{
+    // Here, save the data to a file or database as needed
+}
 
         public void AddCustomer(Customer customer)
         {

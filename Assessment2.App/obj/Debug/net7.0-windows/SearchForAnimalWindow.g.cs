@@ -59,7 +59,7 @@ namespace Assignment2.App {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Assignment2.App;component/searchforanimalwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Assessment2.App;component/searchforanimalwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\SearchForAnimalWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
