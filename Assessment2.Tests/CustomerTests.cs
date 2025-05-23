@@ -16,7 +16,8 @@ namespace Assessment2.Tests
             Assert.Equal("Alice", customer.FirstName);
             Assert.Equal("Smith", customer.Surname);
             Assert.Equal("555-1234", customer.PhoneNumber);
-            Assert.Equal("123 Main St\nCity", customer.Address);
+           Assert.Equal("123 Main St\nCity", customer.Address.Replace("\r", ""));
+
         }
 
         [Fact]

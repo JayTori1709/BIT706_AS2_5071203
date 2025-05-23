@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-// File: VetClinicServiceTests.cs
-
-using Assignment2.App.BusinessLayer;
-using System;
+using Assessment2.App.BusinessLayer;
 using System.IO;
-using System.Linq;
 using Xunit;
 
-namespace Assignment2.Tests
+namespace Assessment2.Tests
 {
     public class VetClinicServiceTests
     {
