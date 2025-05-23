@@ -21,10 +21,10 @@
                   AutoGenerateColumns="False"
                   Margin="0 0 0 10">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*" />
-                <DataGridTextColumn Header="Sex" Binding="{Binding Sex}" Width="*" />
-                <DataGridTextColumn Header="Owner ID" Binding="{Binding OwnerId}" Width="*" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" />
+                <DataGridTextColumn Header="Sex" Binding="{Binding Sex}" />
+                <DataGridTextColumn Header="Owner ID" Binding="{Binding OwnerId}" />
             </DataGrid.Columns>
         </DataGrid>
 

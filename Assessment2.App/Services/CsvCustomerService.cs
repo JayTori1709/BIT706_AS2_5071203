@@ -6,18 +6,23 @@ namespace Assessment2.App.Services
 {
     public class CsvCustomerService : ICustomerService
     {
-        private readonly string filePath = "customers.csv";
+        private const string FilePath = "customers.csv";
 
         public List<Customer> LoadCustomers()
         {
             var customers = new List<Customer>();
 
-            if (!File.Exists(filePath)) return customers;
+            if (!File.Exists(FilePath))
+                return customers;
 
-            var lines = File.ReadAllLines(filePath);
-            for (int i = 1; i < lines.Length; i++)
+            using var reader = new StreamReader(FilePath);
+            string? line;
+            bool isFirst = true;
+
+            while ((line = reader.ReadLine()) != null)
             {
-                customers.Add(Customer.FromCsv(lines[i]));
+                if (isFirst) { isFirst = false; continue; }
+                customers.Add(Customer.FromCsv(line));
             }
 
             return customers;
@@ -25,7 +30,7 @@ namespace Assessment2.App.Services
 
         public void SaveCustomers(List<Customer> customers)
         {
-            using var writer = new StreamWriter(filePath);
+            using var writer = new StreamWriter(FilePath);
             Customer.WriteHeaderToCsv(writer);
             foreach (var customer in customers)
             {

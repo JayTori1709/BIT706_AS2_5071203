@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace Assessment2.App.BusinessLayer
 {
@@ -14,8 +14,7 @@ namespace Assessment2.App.BusinessLayer
         public static Animal FromCsv(string line)
         {
             var parts = line.Split(',');
-
-            var animal = new Animal
+            return new Animal
             {
                 Id = int.Parse(parts[0]),
                 Name = parts[1],
@@ -24,44 +23,29 @@ namespace Assessment2.App.BusinessLayer
                 Sex = parts[4],
                 OwnerId = int.Parse(parts[5])
             };
-
-            return animal;
         }
 
-        public static void WriteHeaderToCsv(TextWriter writer)
-        {
+        public static void WriteHeaderToCsv(TextWriter writer) =>
             writer.WriteLine("Id,Name,Type,Breed,Sex,OwnerId");
-        }
 
-        public bool CheckIfValid()
-        {
-            return !(string.IsNullOrEmpty(Name)
-                || string.IsNullOrEmpty(Type)
-                || string.IsNullOrEmpty(Sex)
-                || OwnerId == 0);
-        }
+        public bool CheckIfValid() =>
+            !string.IsNullOrWhiteSpace(Name) &&
+            !string.IsNullOrWhiteSpace(Type) &&
+            !string.IsNullOrWhiteSpace(Sex) &&
+            OwnerId != 0;
 
-        public override string ToString()
-        {
-            return $"{Name} [{Type}]";
-        }
+        public override string ToString() => $"{Name} [{Type}]";
 
-        public void WriteToCsv(TextWriter writer)
-        {
-            writer.WriteLine(ToCsv());
-        }
+        public void WriteToCsv(TextWriter writer) => writer.WriteLine(ToCsv());
 
-        public string ToCsv()
-        {
-            return string.Join(',', new[]
-            {
+        public string ToCsv() =>
+            string.Join(",", new[] {
                 Id.ToString(),
-                Name ?? string.Empty,
-                Type ?? string.Empty,
-                Breed ?? string.Empty,
-                Sex ?? string.Empty,
+                Name ?? "",
+                Type ?? "",
+                Breed ?? "",
+                Sex ?? "",
                 OwnerId.ToString()
             });
-        }
     }
 }

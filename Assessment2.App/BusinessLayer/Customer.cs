@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace Assessment2.App.BusinessLayer
@@ -14,55 +14,37 @@ namespace Assessment2.App.BusinessLayer
         public static Customer FromCsv(string line)
         {
             var parts = line.Split(',');
-
-            var customer = new Customer
+            return new Customer
             {
                 Id = int.Parse(parts[0]),
                 FirstName = parts[1],
                 Surname = parts[2],
                 PhoneNumber = parts[3],
-                Address = parts.Length > 4
-                    ? parts[4].Trim('"').Replace("\\n", Environment.NewLine)
-                    : string.Empty
+                Address = parts.Length > 4 ? parts[4].Trim('"').Replace("\\n", Environment.NewLine) : ""
             };
-
-            return customer;
         }
 
-        public static void WriteHeaderToCsv(TextWriter writer)
-        {
+        public static void WriteHeaderToCsv(TextWriter writer) =>
             writer.WriteLine("Id,First Name,Surname,Phone,Address");
-        }
 
-        public bool CheckIfValid()
-        {
-            return !(string.IsNullOrEmpty(FirstName)
-                || string.IsNullOrEmpty(PhoneNumber)
-                || string.IsNullOrEmpty(Surname));
-        }
+        public bool CheckIfValid() =>
+            !string.IsNullOrWhiteSpace(FirstName) &&
+            !string.IsNullOrWhiteSpace(Surname) &&
+            !string.IsNullOrWhiteSpace(PhoneNumber);
 
-        public override string ToString()
-        {
-            return $"{Surname}, {FirstName}".Trim();
-        }
+        public override string ToString() => $"{Surname}, {FirstName}";
 
-        public void WriteToCsv(TextWriter writer)
-        {
-            writer.WriteLine(ToCsv());
-        }
+        public void WriteToCsv(TextWriter writer) => writer.WriteLine(ToCsv());
 
         public string ToCsv()
         {
-            var address = Address ?? string.Empty;
-            address = address.Replace("\n", "\\n").Replace("\r", "");
-
-            return string.Join(',', new[]
-            {
+            var address = Address?.Replace("\n", "\\n").Replace("\r", "") ?? "";
+            return string.Join(",", new[] {
                 Id.ToString(),
-                FirstName ?? string.Empty,
-                Surname ?? string.Empty,
-                PhoneNumber ?? string.Empty,
-                "\"" + address + "\""
+                FirstName ?? "",
+                Surname ?? "",
+                PhoneNumber ?? "",
+                $"\"{address}\""
             });
         }
     }

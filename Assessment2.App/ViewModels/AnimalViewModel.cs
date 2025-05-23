@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -33,65 +32,50 @@ namespace Assessment2.App.ViewModels
             Customers = new ObservableCollection<Customer>(_customerService.LoadCustomers());
 
             AddAnimalCommand = new RelayCommand(AddAnimal);
-            EditAnimalCommand = new RelayCommand(EditAnimal, CanEditOrDelete);
-            DeleteAnimalCommand = new RelayCommand(DeleteAnimal, CanEditOrDelete);
+            EditAnimalCommand = new RelayCommand(EditAnimal, () => SelectedAnimal != null);
+            DeleteAnimalCommand = new RelayCommand(DeleteAnimal, () => SelectedAnimal != null);
         }
 
         private void AddAnimal()
         {
             if (SelectedCustomer == null) return;
-
             var animal = new Animal
             {
-                Name = "New Animal",
+                Name = "New Pet",
                 Type = "Type",
+                Breed = "Breed",
                 Sex = "Unknown",
                 OwnerId = SelectedCustomer.Id
             };
-
             Animals.Add(animal);
             _animalService.SaveAnimals(Animals.ToList());
-            OnPropertyChanged(nameof(Animals));
         }
 
         private void EditAnimal()
         {
             _animalService.SaveAnimals(Animals.ToList());
-            OnPropertyChanged(nameof(Animals));
         }
 
         private void DeleteAnimal()
         {
-            if (SelectedAnimal == null)
-                return;
+            if (SelectedAnimal == null) return;
 
-            var result = MessageBox.Show(
+            var confirm = MessageBox.Show(
                 $"Are you sure you want to delete '{SelectedAnimal.Name}'?",
-                "Confirm Deletion",
+                "Confirm Delete",
                 MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                MessageBoxImage.Warning
+            );
 
-            if (result == MessageBoxResult.Yes)
+            if (confirm == MessageBoxResult.Yes)
             {
                 Animals.Remove(SelectedAnimal);
                 _animalService.SaveAnimals(Animals.ToList());
-                OnPropertyChanged(nameof(Animals));
             }
-            else
-            {
-                // Optionally, notify cancellation
-            }
-        }
-
-        private bool CanEditOrDelete()
-        {
-            return SelectedAnimal != null;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = "")
-        {
+        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
     }
 }

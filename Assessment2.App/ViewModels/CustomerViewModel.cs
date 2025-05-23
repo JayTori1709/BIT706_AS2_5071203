@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Assessment2.App.BusinessLayer;
@@ -10,44 +9,35 @@ namespace Assessment2.App.ViewModels
 {
     public class CustomerViewModel : INotifyPropertyChanged
     {
-        private readonly ICustomerService _customerService;
+        private readonly ICustomerService _service;
 
         public ObservableCollection<Customer> Customers { get; set; }
         public Customer? SelectedCustomer { get; set; }
 
-        // Commands
         public ICommand AddCustomerCommand { get; }
         public ICommand EditCustomerCommand { get; }
         public ICommand DeleteCustomerCommand { get; }
 
-        public CustomerViewModel(ICustomerService customerService)
+        public CustomerViewModel(ICustomerService service)
         {
-            _customerService = customerService;
-            var loaded = _customerService.LoadCustomers();
-            Customers = new ObservableCollection<Customer>(loaded);
+            _service = service;
+            Customers = new ObservableCollection<Customer>(_service.LoadCustomers());
 
             AddCustomerCommand = new RelayCommand(AddCustomer);
-            EditCustomerCommand = new RelayCommand(EditCustomer, CanEditOrDelete);
-            DeleteCustomerCommand = new RelayCommand(DeleteCustomer, CanEditOrDelete);
+            EditCustomerCommand = new RelayCommand(EditCustomer, () => SelectedCustomer != null);
+            DeleteCustomerCommand = new RelayCommand(DeleteCustomer, () => SelectedCustomer != null);
         }
 
         private void AddCustomer()
         {
-            var newCustomer = new Customer
-            {
-                FirstName = "New",
-                Surname = "Customer",
-                PhoneNumber = "0000"
-            };
-            Customers.Add(newCustomer);
-            _customerService.SaveCustomers(Customers.ToList());
-            OnPropertyChanged(nameof(Customers));
+            var customer = new Customer { FirstName = "New", Surname = "Customer", PhoneNumber = "000-0000" };
+            Customers.Add(customer);
+            _service.SaveCustomers(Customers.ToList());
         }
 
         private void EditCustomer()
         {
-            _customerService.SaveCustomers(Customers.ToList());
-            OnPropertyChanged(nameof(Customers));
+            _service.SaveCustomers(Customers.ToList());
         }
 
         private void DeleteCustomer()
@@ -55,20 +45,12 @@ namespace Assessment2.App.ViewModels
             if (SelectedCustomer != null)
             {
                 Customers.Remove(SelectedCustomer);
-                _customerService.SaveCustomers(Customers.ToList());
-                OnPropertyChanged(nameof(Customers));
+                _service.SaveCustomers(Customers.ToList());
             }
         }
 
-        private bool CanEditOrDelete()
-        {
-            return SelectedCustomer != null;
-        }
-
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = "")
-        {
+        protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
     }
 }

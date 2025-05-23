@@ -6,18 +6,23 @@ namespace Assessment2.App.Services
 {
     public class CsvAnimalService : IAnimalService
     {
-        private readonly string filePath = "animals.csv";
+        private const string FilePath = "animals.csv";
 
         public List<Animal> LoadAnimals()
         {
             var animals = new List<Animal>();
 
-            if (!File.Exists(filePath)) return animals;
+            if (!File.Exists(FilePath))
+                return animals;
 
-            var lines = File.ReadAllLines(filePath);
-            for (int i = 1; i < lines.Length; i++)
+            using var reader = new StreamReader(FilePath);
+            string? line;
+            bool isFirst = true;
+
+            while ((line = reader.ReadLine()) != null)
             {
-                animals.Add(Animal.FromCsv(lines[i]));
+                if (isFirst) { isFirst = false; continue; }
+                animals.Add(Animal.FromCsv(line));
             }
 
             return animals;
@@ -25,7 +30,7 @@ namespace Assessment2.App.Services
 
         public void SaveAnimals(List<Animal> animals)
         {
-            using var writer = new StreamWriter(filePath);
+            using var writer = new StreamWriter(FilePath);
             Animal.WriteHeaderToCsv(writer);
             foreach (var animal in animals)
             {
