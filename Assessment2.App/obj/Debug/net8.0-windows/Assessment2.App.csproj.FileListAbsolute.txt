@@ -22,3 +22,5 @@ C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.App\obj\Debug
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.App\obj\Debug\net8.0-windows\Assessment2.App.pdb
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.App\obj\Debug\net8.0-windows\Assessment2.App.genruntimeconfig.cache
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.App\obj\Debug\net8.0-windows\ref\Assessment2.App.dll
+C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.App\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.App\obj\Debug\net8.0-windows\MainWindow.g.cs

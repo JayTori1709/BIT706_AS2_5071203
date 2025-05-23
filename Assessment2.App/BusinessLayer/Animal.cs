@@ -1,15 +1,15 @@
 using System.IO;
 
-namespace Assessment2.App.BusinessLayer
+namespace Assignment2.App.BusinessLayer
 {
     public class Animal
     {
-        public string? Breed { get; set; }
+        public string? Breed { get; set; } = "Unknown";
         public int Id { get; set; }
-        public string? Name { get; set; }
+        public string? Name { get; set; } = string.Empty;
         public int OwnerId { get; set; }
-        public string? Sex { get; set; }
-        public string? Type { get; set; }
+        public string? Sex { get; set; } = "Unknown";
+        public string? Type { get; set; } = string.Empty;
 
         public static Animal FromCsv(string line)
         {
@@ -25,27 +25,14 @@ namespace Assessment2.App.BusinessLayer
             };
         }
 
-        public static void WriteHeaderToCsv(TextWriter writer) =>
+        public static void WriteHeaderToCsv(TextWriter writer)
+        {
             writer.WriteLine("Id,Name,Type,Breed,Sex,OwnerId");
+        }
 
-        public bool CheckIfValid() =>
-            !string.IsNullOrWhiteSpace(Name) &&
-            !string.IsNullOrWhiteSpace(Type) &&
-            !string.IsNullOrWhiteSpace(Sex) &&
-            OwnerId != 0;
-
-        public override string ToString() => $"{Name} [{Type}]";
-
-        public void WriteToCsv(TextWriter writer) => writer.WriteLine(ToCsv());
-
-        public string ToCsv() =>
-            string.Join(",", new[] {
-                Id.ToString(),
-                Name ?? "",
-                Type ?? "",
-                Breed ?? "",
-                Sex ?? "",
-                OwnerId.ToString()
-            });
+        public void WriteToCsv(TextWriter writer)
+        {
+            writer.WriteLine($"{Id},{Name},{Type},{Breed},{Sex},{OwnerId}");
+        }
     }
 }

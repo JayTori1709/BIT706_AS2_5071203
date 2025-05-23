@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.App\App.xaml
-2-705427040
+3701618301
 
-121505442631
+13622396422
 198721104041
-Views\AnimalEditor.xaml;Views\CustomerEditor.xaml;
+MainWindow.xaml;Views\AnimalEditor.xaml;Views\CustomerEditor.xaml;
 
-False
+True
 
