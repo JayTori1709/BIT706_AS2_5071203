@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
     /// <summary>
     /// Interaction logic for EditCustomerWindow.xaml

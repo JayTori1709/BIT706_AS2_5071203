@@ -1,4 +1,4 @@
-﻿using Assignment2.App.BusinessLayer;
+﻿using Assessment2.App.BusinessLayer;
 
 namespace Assignment2.Tests
 {

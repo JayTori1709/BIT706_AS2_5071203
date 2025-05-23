@@ -1,7 +1,7 @@
-﻿using Assignment2.App.BusinessLayer;
+﻿using Assessment2.App.BusinessLayer;
 using System.Windows;
 
-namespace Assignment2.App
+namespace Assessment2.App
 {
     /// <summary>
     /// Interaction logic for CustomerEditorWindow.xaml
