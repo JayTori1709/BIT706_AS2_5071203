@@ -1,6 +1,5 @@
+using System;
 using System.Windows;
-using Assessment2.App.Services;
-using Assessment2.App.ViewModels;
 
 namespace Assessment2.App.Views
 {
@@ -9,10 +8,6 @@ namespace Assessment2.App.Views
         public AnimalEditor()
         {
             InitializeComponent();
-            DataContext = new AnimalViewModel(
-                new CsvAnimalService(),
-                new CsvCustomerService()
-            );
         }
     }
 }
