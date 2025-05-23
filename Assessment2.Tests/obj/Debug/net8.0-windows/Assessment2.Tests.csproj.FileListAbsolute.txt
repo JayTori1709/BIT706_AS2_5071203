@@ -11,6 +11,7 @@ C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Deb
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Debug\net8.0-windows\Assessment2.Tests.runtimeconfig.json
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Debug\net8.0-windows\Assessment2.Tests.dll
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Debug\net8.0-windows\Assessment2.Tests.pdb
+C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Debug\net8.0-windows\CommunityToolkit.Mvvm.dll
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Debug\net8.0-windows\Microsoft.VisualStudio.CodeCoverage.Shim.dll
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Debug\net8.0-windows\Microsoft.TestPlatform.CoreUtilities.dll
 C:\Users\jayde\OneDrive\Documents\A2_Code_for_Students\Assessment2.Tests\bin\Debug\net8.0-windows\Microsoft.TestPlatform.PlatformAbstractions.dll
