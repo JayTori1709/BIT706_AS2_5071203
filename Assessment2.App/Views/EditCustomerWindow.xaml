@@ -34,9 +34,10 @@
                  AcceptsReturn="True" TextWrapping="Wrap"/>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Margin="10,0,5,0"/>
-            <Button Content="Save" Command="{Binding SaveCommand}"/>
-        </StackPanel>
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+    <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="10,0"/>
+    <Button Content="Delete" Command="{Binding DeleteCommand}" Width="100" Margin="10,0"/>
+    <Button Content="Save" Command="{Binding SaveCommand}" Width="100"/>
+</StackPanel>
     </Grid>
 </Window>
