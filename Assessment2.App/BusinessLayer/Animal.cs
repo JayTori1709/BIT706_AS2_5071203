@@ -1,6 +1,6 @@
-using System.IO;
+﻿using System.IO;
 
-namespace Assignment2.App.BusinessLayer
+namespace Assessment2.App.BusinessLayer
 {
     public class Animal
     {
