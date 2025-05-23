@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using Assessment2.App.BusinessLayer;
 using Assessment2.App.Services;
@@ -61,11 +62,24 @@ namespace Assessment2.App.ViewModels
 
         private void DeleteAnimal()
         {
-            if (SelectedAnimal != null)
+            if (SelectedAnimal == null)
+                return;
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete '{SelectedAnimal.Name}'?",
+                "Confirm Deletion",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
             {
                 Animals.Remove(SelectedAnimal);
                 _animalService.SaveAnimals(Animals.ToList());
                 OnPropertyChanged(nameof(Animals));
+            }
+            else
+            {
+                // Optionally, notify cancellation
             }
         }
 
