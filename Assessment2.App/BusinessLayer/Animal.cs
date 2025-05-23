@@ -5,20 +5,16 @@ namespace Assessment2.App.BusinessLayer
     public class Animal
     {
         public string? Breed { get; set; }
-
         public int Id { get; set; }
-
         public string? Name { get; set; }
-
         public int OwnerId { get; set; }
-
         public string? Sex { get; set; }
-
         public string? Type { get; set; }
 
         public static Animal FromCsv(string line)
         {
             var parts = line.Split(',');
+
             var animal = new Animal
             {
                 Id = int.Parse(parts[0]),
@@ -26,7 +22,7 @@ namespace Assessment2.App.BusinessLayer
                 Type = parts[2],
                 Breed = parts[3],
                 Sex = parts[4],
-                OwnerId = int.Parse(parts[5]),
+                OwnerId = int.Parse(parts[5])
             };
 
             return animal;
@@ -42,7 +38,7 @@ namespace Assessment2.App.BusinessLayer
             return !(string.IsNullOrEmpty(Name)
                 || string.IsNullOrEmpty(Type)
                 || string.IsNullOrEmpty(Sex)
-                || (OwnerId == 0));
+                || OwnerId == 0);
         }
 
         public override string ToString()
@@ -52,15 +48,20 @@ namespace Assessment2.App.BusinessLayer
 
         public void WriteToCsv(TextWriter writer)
         {
-            writer.WriteLine(string.Join(',', new[]
+            writer.WriteLine(ToCsv());
+        }
+
+        public string ToCsv()
+        {
+            return string.Join(',', new[]
             {
                 Id.ToString(),
                 Name ?? string.Empty,
                 Type ?? string.Empty,
                 Breed ?? string.Empty,
                 Sex ?? string.Empty,
-                OwnerId.ToString(),
-            }));
+                OwnerId.ToString()
+            });
         }
     }
 }

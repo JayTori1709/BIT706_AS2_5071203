@@ -6,25 +6,24 @@ namespace Assessment2.App.BusinessLayer
     public class Customer
     {
         public string? Address { get; set; }
-
         public string? FirstName { get; set; }
-
         public int Id { get; set; }
-
         public string? PhoneNumber { get; set; }
-
         public string? Surname { get; set; }
 
         public static Customer FromCsv(string line)
         {
             var parts = line.Split(',');
+
             var customer = new Customer
             {
                 Id = int.Parse(parts[0]),
                 FirstName = parts[1],
                 Surname = parts[2],
                 PhoneNumber = parts[3],
-                Address = parts[4][1..^1].Replace("\\n", Environment.NewLine),
+                Address = parts.Length > 4
+                    ? parts[4].Trim('"').Replace("\\n", Environment.NewLine)
+                    : string.Empty
             };
 
             return customer;
@@ -44,25 +43,27 @@ namespace Assessment2.App.BusinessLayer
 
         public override string ToString()
         {
-            return $"{Surname}, {FirstName}".Trim(); ;
+            return $"{Surname}, {FirstName}".Trim();
         }
 
         public void WriteToCsv(TextWriter writer)
         {
+            writer.WriteLine(ToCsv());
+        }
+
+        public string ToCsv()
+        {
             var address = Address ?? string.Empty;
+            address = address.Replace("\n", "\\n").Replace("\r", "");
 
-            // Remove newlines so they don't screw up the reading later
-            address = address.Replace("\n", "\\n");
-            address = address.Replace("\r", "");
-
-            writer.WriteLine(string.Join(',', new[]
+            return string.Join(',', new[]
             {
                 Id.ToString(),
                 FirstName ?? string.Empty,
                 Surname ?? string.Empty,
                 PhoneNumber ?? string.Empty,
-                "\"" + address + "\"",
-            }));
+                "\"" + address + "\""
+            });
         }
     }
 }
