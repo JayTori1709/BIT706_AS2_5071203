@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "8VHsI2ZCRBs=",
-  "success": false,
+  "dgSpecHash": "PSAKldeaazg=",
+  "success": true,
   "projectFilePath": "C:\\Users\\jayde\\OneDrive\\Documents\\A2_Code_for_Students\\Assessment2.Tests\\Assessment2.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jayde\\.nuget\\packages\\microsoft.codecoverage\\17.10.0\\microsoft.codecoverage.17.10.0.nupkg.sha512",
@@ -95,15 +95,5 @@
     "C:\\Users\\jayde\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.14\\microsoft.windowsdesktop.app.ref.8.0.14.nupkg.sha512",
     "C:\\Users\\jayde\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.14\\microsoft.aspnetcore.app.ref.8.0.14.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1201",
-      "level": "Error",
-      "message": "Project Assessment2.App is not compatible with net8.0 (.NETCoreApp,Version=v8.0). Project Assessment2.App supports: net8.0-windows7.0 (.NETCoreApp,Version=v8.0)",
-      "libraryId": "Assessment2.App",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }
